@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
@@ -37,11 +38,13 @@ public class DetailActivity extends AppCompatActivity {
         String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
         String json = sandwiches[position];
         Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+
         if (sandwich == null) {
             // Sandwich data unavailable
             closeOnError();
             return;
         }
+
 
         populateUI();
         Picasso.with(this)
@@ -49,14 +52,32 @@ public class DetailActivity extends AppCompatActivity {
                 .into(ingredientsIv);
 
         setTitle(sandwich.getMainName());
+
+
     }
 
     private void closeOnError() {
         finish();
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
-
+//Just using the int 2 for testing with populating the data.
     private void populateUI() {
+        String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
+        String json = sandwiches[2];
+        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+
+        TextView descriptionTextView = findViewById(R.id.description_tv);
+        descriptionTextView.setText(sandwich.getDescription());
+
+        TextView akaTextView = findViewById(R.id.also_known_tv);
+        akaTextView.setText((CharSequence) sandwich.getAlsoKnownAs());
+
+        TextView ingredientsTextView = findViewById(R.id.ingredients_tv);
+        ingredientsTextView.setText((CharSequence) sandwich.getIngredients());
+
+        TextView OriginTextview = findViewById(R.id.origin_tv);
+        OriginTextview.setText(sandwich.getPlaceOfOrigin());
+
 
     }
 }
