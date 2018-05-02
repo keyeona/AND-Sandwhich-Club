@@ -11,6 +11,8 @@ import com.squareup.picasso.Picasso;
 import com.udacity.sandwichclub.model.Sandwich;
 import com.udacity.sandwichclub.utils.JsonUtils;
 
+import java.util.List;
+
 public class DetailActivity extends AppCompatActivity {
 
     public static final String EXTRA_POSITION = "extra_position";
@@ -46,7 +48,7 @@ public class DetailActivity extends AppCompatActivity {
         }
 
 
-        populateUI();
+        populateUI(sandwich);
         Picasso.with(this)
                 .load(sandwich.getImage())
                 .into(ingredientsIv);
@@ -61,23 +63,51 @@ public class DetailActivity extends AppCompatActivity {
         Toast.makeText(this, R.string.detail_error_message, Toast.LENGTH_SHORT).show();
     }
 //Just using the int 2 for testing with populating the data.
-    private void populateUI() {
-        String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
-        String json = sandwiches[2];
-        Sandwich sandwich = JsonUtils.parseSandwichJson(json);
+    private void populateUI(Sandwich sandwich) {
+        //String[] sandwiches = getResources().getStringArray(R.array.sandwich_details);
+        //String json = sandwiches[2];
+        //Sandwich sandwich = JsonUtils.parseSandwichJson(json);
 
         TextView descriptionTextView = findViewById(R.id.description_tv);
         descriptionTextView.setText(sandwich.getDescription());
 
-        TextView akaTextView = findViewById(R.id.also_known_tv);
-        akaTextView.setText((CharSequence) sandwich.getAlsoKnownAs());
 
-        TextView ingredientsTextView = findViewById(R.id.ingredients_tv);
-        ingredientsTextView.setText((CharSequence) sandwich.getIngredients());
 
         TextView OriginTextview = findViewById(R.id.origin_tv);
         OriginTextview.setText(sandwich.getPlaceOfOrigin());
 
+        List <String> alsoKnownAsList = sandwich.getAlsoKnownAs();
+        TextView akaTextView = findViewById(R.id.also_known_tv);
+        //akaTextView.setText((CharSequence) sandwich.getAlsoKnownAs());
+        akaTextView.setText(getFormattedString(alsoKnownAsList));
 
+
+        List <String> ingredients = sandwich.getIngredients();
+        TextView ingredientsTextView = findViewById(R.id.ingredients_tv);
+        //ingredientsTextView.setText((CharSequence) sandwich.getIngredients());
+        ingredientsTextView.setText(getFormattedString(ingredients));
+
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+
+
+    }
+    private String getFormattedString(List<String> list) {
+
+        StringBuilder stringBuilder = new StringBuilder();
+        int size = list.size();
+        if (size > 0) {
+            for (int i = 0; i < size; i++) {
+
+                stringBuilder.append(list.get(i));
+
+                if (i != size - 1) {
+                    stringBuilder.append(" \n ");
+                }
+
+            }
+        }
+        return stringBuilder.toString();
     }
 }

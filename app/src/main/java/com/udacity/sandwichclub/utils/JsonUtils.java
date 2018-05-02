@@ -17,13 +17,13 @@ import java.util.List;
 
 public class JsonUtils {
 
-    private static String SC_NAME = "name";
-    private static String SC_AKA = "alsoKnownAs";
-    private static String SC_ORIGIN = "placeOfOrigin";
-    private static String SC_DESCR = "description";
-    private static String SC_INGREDIENTS = "ingredients";
-    private static String SC_IMAGE = "image";
-    private static String SC_MAIN = "mainName";
+    final private static String SC_NAME = "name";
+    final private static String SC_AKA = "alsoKnownAs";
+    final private static String SC_ORIGIN = "placeOfOrigin";
+    final private static String SC_DESCR = "description";
+    final private static String SC_INGREDIENTS = "ingredients";
+    final private static String SC_IMAGE = "image";
+    final private static String SC_MAIN = "mainName";
 
 
 
@@ -45,9 +45,11 @@ public class JsonUtils {
             mainName = jsonObject.getJSONObject(SC_NAME).getString(SC_MAIN);
             image = jsonObject.getString(SC_IMAGE);
             description = jsonObject.getString(SC_DESCR);
-            ingredients = (List<String>) jsonObject.getJSONObject(SC_INGREDIENTS);
-            alsoKnownAs = (List<String>) jsonObject.getJSONObject(SC_NAME).getJSONArray(SC_AKA);
+            //ingredients = (List<String>) jsonObject.getJSONObject(SC_INGREDIENTS);
+            //alsoKnownAs = (List<String>) jsonObject.getJSONObject(SC_NAME).getJSONArray(SC_AKA);
             placeOfOrigin =jsonObject.getString(SC_ORIGIN);
+            alsoKnownAs = getArray(jsonObject.getJSONObject(SC_NAME).getJSONArray(SC_AKA));
+            ingredients = getArray(jsonObject.getJSONArray(SC_INGREDIENTS));
 
 
 
@@ -58,6 +60,19 @@ public class JsonUtils {
 
 
         return new Sandwich(mainName, alsoKnownAs, placeOfOrigin, description, image, ingredients);
+    }
+
+    private static List<String> getArray(JSONArray jsonArray) {
+
+        List<String> strs = new ArrayList<>();
+        try {
+            for (int i = 0; i < jsonArray.length(); i++) {
+                strs.add(jsonArray.getString(i));
+            }
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return strs;
     }
 
 
